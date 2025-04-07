@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FPL Team Generator</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>Fantasy Premier League Team Generator</h1>
+
+        <form action="{{ url_for('generate_team') }}" method="get">
+            <button type="submit">Generate Optimal Team</button>
+        </form>
+
+        {% if error %}
+            <p class="error">{{ error }}</p>
+        {% elif team %}
+            <h2>Optimal Team</h2>
+            <div class="team-info">
+                <p><strong>Total Cost:</strong> £{{ total_cost / 10 }}m</p>
+                <p><strong>Expected Points:</strong> {{ total_points | round(2) }}</p>
+                <p><strong>Captain:</strong> {{ captain }} (Highest Points)</p>
+                <p><strong>Vice-Captain:</strong> {{ vice_captain }}</p>
+            </div>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Player</th>
+                        <th>Position</th>
+                        <th>Team</th>
+                        <th>Cost (£m)</th>
+                        <th>Expected Points</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for player in team %}
+                        <tr>
+                            <td>{{ player['web_name'] }}</td>
+                            <td>{{ player['position'] }}</td>
+                            <td>{{ player['team'] }}</td>
+                            <td>{{ player['now_cost'] / 10 }}</td>
+                            <td>{{ player['ep_next'] | round(2) }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% endif %}
+    </div>
+</body>
+</html>
